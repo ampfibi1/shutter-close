@@ -6,6 +6,7 @@ import { AdminModule } from './admin/admin.module.js';
 import { CustomerModule } from './customer/customer.module.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Address, AdminAuditLog, Category, CoinReward, CoinTransaction, DiscountRule, Order, OrderItem, Payment, Product, ProductPaymentOption, ShopSetting, User } from './entities/index.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -23,10 +24,12 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_DATABASE'),
 
-        autoLoadEntities: true,
+         entities: [ User, Address, Category, Product, 
+          ProductPaymentOption, DiscountRule,
+          Order, OrderItem, Payment, CoinTransaction, 
+          CoinReward, ShopSetting, AdminAuditLog],
 
-        // Development only: automatically creates/updates tables.
-        synchronize: true
+        synchronize: true, // Development only
       })
     }),
     // Distributed tracing, auto-correlated logs, request/job metrics, error
