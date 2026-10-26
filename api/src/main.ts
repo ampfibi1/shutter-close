@@ -13,7 +13,8 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
       transform: true,
     }),
-  );
+  );//i need to know why use this global pipes ? 
+  
   await app.listen(process.env.PORT ?? 3000);
 }
 await bootstrap();

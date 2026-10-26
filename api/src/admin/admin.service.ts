@@ -1,12 +1,9 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "../entities/users.entity.js";
 import { Repository } from "typeorm";
-import { GetUserDto } from "./dto/users_dto/getuser.dto.js";
-import { Category } from "../entities/categories.entity.js";
-import { Product } from "../entities/products.entity.js";
-import { Order } from "../entities/orders.entity.js";
-import { CreateCategoryDto } from "./dto/users_dto/create-category.dto.js";
+
+import { CreateCategoryDto, CreateProductDto, } from "./dto/index.js";
+import {Category, Order, Product, User } from "../entities/index.js";
 
 @Injectable()
 export class AdminService{
@@ -30,24 +27,6 @@ export class AdminService{
       ]);
 
       return {totalUsers,totalCategories,totalProducts,totalOrders,};
-    }
-
-    //-----------------------------user details-----------------------
-    async getUsers(): Promise<GetUserDto[]> {
-        const users = await this.userRepo.find({order: { id: 'DESC' }  });
-        return users.map(({ passwordHash, ...user }) => user);
-    }
-
-    async setUserActive(id: string, isActive: boolean) : Promise<Omit<User, 'passwordHash'>>{
-        const user = await this.userRepo.findOneBy({ id });
-
-        if (!user)  throw new NotFoundException('User not found');
-
-        user.isActive = isActive;
-        const savedUser = await this.userRepo.save(user);
-        const { passwordHash, ...safeUser } = savedUser;
-
-        return safeUser;
     }
     
     //--------------------------------category-------------------------
@@ -78,5 +57,29 @@ export class AdminService{
     }
 
     //---------------------------------product----------------------
-    
+    getProducts():Promise<Product[]> {
+      return this.productRepo.find({relations: { category: true },order: { id: 'DESC' }});
+    }
+
+    createProduct(dto: CreateProductDto):Promise<Product> {
+      return this.productRepo.save(this.productRepo.create(dto) );
+    }
+
+    async updateProduct(id: string, dto: CreateProductDto):Promise<Product>{
+      const product = await this.productRepo.findOneBy({ id });
+
+      if (!product)   throw new NotFoundException('Product not found');
+
+      this.productRepo.merge(product, dto);
+      return this.productRepo.save(product);
+    }
+
+    async deleteProduct(id: string):Promise<{message:string}> {
+      const product = await this.productRepo.findOneBy({ id });
+
+      if (!product) throw new NotFoundException('Product not found');
+
+      await this.productRepo.remove(product);
+      return { message: 'Product deleted successfully' };
+    }
 }

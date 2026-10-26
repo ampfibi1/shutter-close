@@ -1,4 +1,4 @@
-import { UserRole } from "../../../entities/enums/role.enum.js";
+import { UserRole } from "../../entities/enums/role.enum.js";
 
 export class GetUserDto {
   name: string;
