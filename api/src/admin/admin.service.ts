@@ -3,30 +3,16 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 import { CreateCategoryDto, CreateProductDto, } from "./dto/index.js";
-import {Category, Order, Product, User } from "../entities/index.js";
+import {Category, Product} from "../entities/index.js";
 
 @Injectable()
 export class AdminService{
     constructor(
-        @InjectRepository(User) private readonly userRepo:Repository<User>,
         @InjectRepository(Category) private readonly categoryRepo:Repository<Category>,
         @InjectRepository(Product) private readonly productRepo:Repository<Product>,
-        @InjectRepository(Order) private readonly orderRepo:Repository<Order>,
     ){}
     getString():string{
         return "hello test";
-    }
-
-    //----------------------------Dashboard-------------------------
-    async getDashboard() {
-      const [totalUsers,totalCategories,totalProducts,totalOrders,] = await Promise.all([
-        this.userRepo.count(),
-        this.categoryRepo.count(),
-        this.productRepo.count(),
-        this.orderRepo.count(),
-      ]);
-
-      return {totalUsers,totalCategories,totalProducts,totalOrders,};
     }
     
     //--------------------------------category-------------------------
