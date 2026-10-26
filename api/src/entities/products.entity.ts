@@ -5,6 +5,7 @@ import { ProductStatus } from "./enums/product_status.enum.js";
 import { ProductPaymentOption } from "./product_payment_options.entity.js";
 import { OrderItem } from "./order_items.entity.js";
 import { CoinReward } from "./coin_rewards.entity.js";
+import { ProductImage } from './product_images.entity.js';
 
 @Entity('products')
 @Index('IDX_products_categoryId', ['categoryId'])
@@ -57,6 +58,11 @@ export class Product {
 
   @OneToOne(() => CoinReward, (reward) => reward.product)
   coinReward: Relation<CoinReward> | null;
+
+  @OneToMany(() => ProductImage, (image) => image.product, {
+    cascade: false,
+  })
+  images: Relation<ProductImage[]>;
 
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;

@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { CreateCategoryDto, CreateProductDto, } from "./dto/index.js";
+import { CategoryDto, ProductDto, } from "./dto/index.js";
 import {Category, Product} from "../entities/index.js";
 
 @Injectable()
@@ -20,11 +20,11 @@ export class AdminService{
       return await this.categoryRepo.find({relations: { parent: true },order: { name: 'ASC' }});
     }
 
-    createCategory(dto: CreateCategoryDto): Promise<Category> {
+    createCategory(dto: CategoryDto): Promise<Category> {
       return this.categoryRepo.save(this.categoryRepo.create(dto));
     }
 
-    async updateCategory(id: string, dto: CreateCategoryDto) : Promise<Category>{
+    async updateCategory(id: string, dto: CategoryDto) : Promise<Category>{
       const category = await this.categoryRepo.findOneBy({ id });
 
       if (!category) throw new NotFoundException('Category not found');
@@ -47,11 +47,11 @@ export class AdminService{
       return this.productRepo.find({relations: { category: true },order: { id: 'DESC' }});
     }
 
-    createProduct(dto: CreateProductDto):Promise<Product> {
+    createProduct(dto: ProductDto):Promise<Product> {
       return this.productRepo.save(this.productRepo.create(dto) );
     }
 
-    async updateProduct(id: string, dto: CreateProductDto):Promise<Product>{
+    async updateProduct(id: string, dto: ProductDto):Promise<Product>{
       const product = await this.productRepo.findOneBy({ id });
 
       if (!product)   throw new NotFoundException('Product not found');
