@@ -56,6 +56,9 @@ export class AdminService{
     }
 
     async updateProduct(id: string, dto: ProductDto, photos?: Express.Multer.File[]):Promise<Product>{
+      // Find product, update its fields,
+      // and process any newly uploaded photos.
+      // Implement this logic before using the endpoint.
       const product = await this.productRepo.findOneBy({ id });
 
       if (!product)   throw new NotFoundException('Product not found');

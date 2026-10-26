@@ -1,15 +1,20 @@
-import {Entity,PrimaryGeneratedColumn,Column,ManyToOne,JoinColumn,CreateDateColumn,Index,} from 'typeorm';
-
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import type { Relation } from 'typeorm';
+
 import { Product } from './products.entity.js';
 
 @Entity('product_images')
-@Index('IDX_product_images_productId', ['productId'])
 export class ProductImage {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'varchar', length: 500 })
   imageUrl: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
@@ -18,18 +23,12 @@ export class ProductImage {
   @Column({ type: 'boolean', default: false })
   isPrimary: boolean;
 
-  @Column({ type: 'integer', default: 0 })
+  @Column({ type: 'int', default: 0 })
   sortOrder: number;
 
-  @ManyToOne(() => Product, (product) => product.images, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'productId' })
-  product: Relation<Product>;
-
-  @Column({ type: 'uuid' })
-  productId: string;
-
-  @CreateDateColumn({ type: 'timestamptz' })
-  createdAt: Date;
+@ManyToOne(() => Product, (product) => product.images, {
+  onDelete: 'CASCADE',
+})
+@JoinColumn({ name: 'productId' })
+product: Relation<Product>;
 }

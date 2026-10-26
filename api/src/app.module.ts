@@ -7,6 +7,7 @@ import { CustomerModule } from './customer/customer.module.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Address, AdminAuditLog, Category, CoinReward, CoinTransaction, DiscountRule, Order, OrderItem, Payment, Product, ProductPaymentOption, ShopSetting, User } from './entities/index.js';
+import { ProductImage } from './entities/product_images.entity.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -26,7 +27,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
          entities: [ User, Address, Category, Product, 
           ProductPaymentOption, DiscountRule,
-          Order, OrderItem, Payment, CoinTransaction, 
+          Order, OrderItem, Payment, CoinTransaction,ProductImage, 
           CoinReward, ShopSetting, AdminAuditLog],
 
         synchronize: true, // Development only
