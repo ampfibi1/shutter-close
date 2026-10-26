@@ -4,6 +4,7 @@ import { Repository } from "typeorm";
 
 import { CategoryDto, ProductDto, } from "./dto/index.js";
 import {Category, Product} from "../entities/index.js";
+import type { Multer } from "multer";
 
 @Injectable()
 export class AdminService{
@@ -47,11 +48,14 @@ export class AdminService{
       return this.productRepo.find({relations: { category: true },order: { id: 'DESC' }});
     }
 
-    createProduct(dto: ProductDto):Promise<Product> {
+    createProduct(dto: ProductDto,photos?: Express.Multer.File[],):Promise<Product> {
+      // Upload photos to your storage provider,
+      // save the product, and save its image URLs.
+      // Implement this logic before using the endpoint.
       return this.productRepo.save(this.productRepo.create(dto) );
     }
 
-    async updateProduct(id: string, dto: ProductDto):Promise<Product>{
+    async updateProduct(id: string, dto: ProductDto, photos?: Express.Multer.File[]):Promise<Product>{
       const product = await this.productRepo.findOneBy({ id });
 
       if (!product)   throw new NotFoundException('Product not found');
