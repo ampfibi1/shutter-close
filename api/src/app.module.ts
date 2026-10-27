@@ -11,16 +11,27 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
 @Module({
   imports: [
-    ConfigModule.forRoot({isGlobal:true}),
+    ConfigModule.forRoot({
+      isGlobal:true,
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        type: 'postgres',
-        url: config.getOrThrow<string>('DATABASE_URL'),
-        autoLoadEntities: true,
-        synchronize: true, // Development only
-      })
+      useFactory: (config: ConfigService) => {
+        const dbEnv = config.get<string>('DB_ENV', 'local');
+        const databaseUrl = dbEnv === 'neon' ? config.getOrThrow<string>('NEON_DATABASE_URL') : config.getOrThrow<string>('LOCAL_DATABASE_URL');
+
+        if (!databaseUrl) throw new Error(`Database URL is missing for DB_ENV=${dbEnv}`);
+
+        return {
+          type: 'postgres',
+          url: databaseUrl,
+          autoLoadEntities: true,
+          synchronize: true, // Development only
+          ssl:
+            dbEnv === 'neon' ? { rejectUnauthorized: false } : false,
+        };
+      },
     }),
     // Distributed tracing, auto-correlated logs, request/job metrics, error
     // telemetry, alarms, and more — out of the box. Sign up at https://observe.nestjs.com
