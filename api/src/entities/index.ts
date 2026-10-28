@@ -11,3 +11,4 @@ export * from './coin_transactions.entity.js';
 export * from './coin_rewards.entity.js';
 export * from './shop_settings.entity.js';
 export * from './admin_audit_logs.entity.js';
+export * from './product_images.entity.js';
