@@ -1,7 +1,8 @@
 import {Body,Controller,Delete,Get,Param,ParseUUIDPipe,Patch,Post,UploadedFiles,UseInterceptors,UsePipes,ValidationPipe,BadRequestException,} from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { AdminService } from './admin.service.js';
-import { CategoryDto, ProductDto } from './dto/index.js';
+import { CategoryDto, ProductDto, ProductImageDto } from './dto/index.js';
+import { CloudinaryService } from '../common/services/cloudinary.services.js';
 
 @Controller('admin')
 @UsePipes(
@@ -13,6 +14,7 @@ import { CategoryDto, ProductDto } from './dto/index.js';
 export class AdminController {
   constructor(
     private readonly adminService: AdminService,
+    private readonly cloudinaryService:CloudinaryService
   ) {}
 
   // -------------------- CATEGORY CRUD --------------------
@@ -42,66 +44,30 @@ export class AdminController {
     return this.adminService.getProducts();
   }
 
-  @Post('products')
-  @UseInterceptors(
-    FilesInterceptor('photos', 5, {
-      limits: {
-        fileSize: 5 * 1024 * 1024, // 5 MB per photo
-      },
-      fileFilter: (_req, file, callback) => {
-        const allowedTypes = [
-          'image/jpeg',
-          'image/png',
-          'image/webp',
-        ];
+  @Post("products")
+  createProduct(@Body() body: ProductDto & { images?: ProductImageDto[] },) {
+    const { images, ...dto } = body;
 
-        if (!allowedTypes.includes(file.mimetype)) {
-          return callback(
-            new BadRequestException('Only JPEG, PNG, and WebP images are allowed',),
-            false,
-          );
-        }
-
-        callback(null, true);
-      },
-    }),
-  )
-  createProduct(@Body() dto: ProductDto,@UploadedFiles() photos: Express.Multer.File[]) {
-    return this.adminService.createProduct(dto,photos ?? [],);
+    return this.adminService.createProduct(dto as ProductDto,images ?? [],);
   }
 
-  @Patch('products/:id')
-  @UseInterceptors(
-    FilesInterceptor('photos', 5, {
-      limits: {
-        fileSize: 5 * 1024 * 1024,
-      },
-      fileFilter: (_req, file, callback) => {
-        const allowedTypes = [
-          'image/jpeg',
-          'image/png',
-          'image/webp',
-        ];
+  @Patch("products/:id")
+  updateProduct(@Param("id", ParseUUIDPipe) id: string,
+    @Body() body: ProductDto & { images?: ProductImageDto[] } ) 
+  {
+    const { images, ...dto } = body;
 
-        if (!allowedTypes.includes(file.mimetype)) {
-          return callback(
-            new BadRequestException(
-              'Only JPEG, PNG, and WebP images are allowed',
-            ),
-            false,
-          );
-        }
-
-        callback(null, true);
-      },
-    }),
-  )
-  updateProduct(@Param('id', ParseUUIDPipe) id: string,@Body() dto: ProductDto,@UploadedFiles() photos: Express.Multer.File[]) {
-    return this.adminService.updateProduct(id,dto,photos ?? [],);
+    return this.adminService.updateProduct(id,dto as ProductDto,images,);
   }
 
-  @Delete('products/:id')
-  deleteProduct(@Param('id', ParseUUIDPipe) id: string) {
+  @Delete("products/:id")
+  deleteProduct(@Param("id", ParseUUIDPipe) id: string,) {
     return this.adminService.deleteProduct(id);
+  }
+  
+  //-----------------------cloudinary/singature-----------------
+  @Post('cloudinary/signature')
+  getCloudinarySignature() {
+    return this.cloudinaryService.generateUploadSignature();
   }
 }

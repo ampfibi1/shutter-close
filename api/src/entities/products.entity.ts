@@ -59,10 +59,10 @@ export class Product {
   @OneToOne(() => CoinReward, (reward) => reward.product)
   coinReward: Relation<CoinReward> | null;
 
-@OneToMany(() => ProductImage, (image) => image.product, {
-  cascade: true,
-})
-images: Relation<ProductImage[]>;
+  @OneToMany(() => ProductImage, (image) => image.product, {
+    cascade: true,
+  })
+  images: Relation<ProductImage[]>;
 
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;

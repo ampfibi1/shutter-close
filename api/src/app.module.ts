@@ -6,6 +6,7 @@ import { AdminModule } from './admin/admin.module.js';
 import { CustomerModule } from './customer/customer.module.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CloudinaryModule } from './common/services/cloudinary.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -40,7 +41,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       appSecret: 'YOUR_APP_SECRET',
       serviceId: 'api',
     }),
-    AdminModule, CustomerModule
+    AdminModule, CustomerModule,CloudinaryModule
   ],
   controllers: [AppController],
   providers: [AppService]

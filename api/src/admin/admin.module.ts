@@ -2,8 +2,8 @@ import { Module } from "@nestjs/common";
 import { AdminController } from "./admin.controller.js";
 import { AdminService } from "./admin.service.js";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { Address, AdminAuditLog, Category, CoinReward, CoinTransaction, DiscountRule, Order, OrderItem, Payment, Product, ProductPaymentOption, ShopSetting, User } from "../entities/index.js";
-import { ProductImage } from "../entities/product_images.entity.js";
+import { Address, AdminAuditLog, Category, CoinReward, CoinTransaction, DiscountRule, Order, OrderItem, Payment, Product, ProductImage, ProductPaymentOption, ShopSetting, User } from "../entities/index.js";
+import { CloudinaryModule } from "../common/services/cloudinary.module.js";
 
 @Module({
     imports:[
@@ -12,7 +12,8 @@ import { ProductImage } from "../entities/product_images.entity.js";
           ProductPaymentOption, DiscountRule,
           Order, OrderItem, Payment, CoinTransaction,ProductImage, 
           CoinReward, ShopSetting, AdminAuditLog
-        ])
+        ]),
+        CloudinaryModule
     ],
     controllers:[AdminController],
     providers:[AdminService]
