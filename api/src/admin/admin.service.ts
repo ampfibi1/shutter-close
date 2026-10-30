@@ -15,7 +15,7 @@ export class AdminService{
       private readonly cloudinaryService:CloudinaryService
   ){}
   getString():string{
-      return "hello test";
+      return "hello check is change directly work??";
   }
   
   //--------------------------------category-------------------------
