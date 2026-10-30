@@ -28,7 +28,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
           type: 'postgres',
           url: databaseUrl,
           autoLoadEntities: true,
-          synchronize: true, // Development only
+          synchronize: true, 
           ssl:
             dbEnv === 'neon' ? { rejectUnauthorized: false } : false,
         };
