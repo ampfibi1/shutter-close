@@ -1,0 +1,43 @@
+services:
+  # Backend NestJS API
+  - type: web
+    name: shutterbox-api
+    runtime: node
+    plan: free
+    region: ohio
+    rootDir: api
+    buildCommand: npm install --legacy-peer-deps && npm run build
+    startCommand: npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DB_ENV
+        value: neon
+      - key: NEON_DATABASE_URL
+        value: postgresql://neondb_owner:npg_J3ircaCI8EuV@ep-young-salad-b4hhr3t3-pooler.c-6.us-east-2.aws.neon.tech/neondb?sslmode=require
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLOUDINARY_URL
+        value: cloudinary://dummy:dummy@dummycloud
+
+  # Frontend Next.js Web Storefront
+  - type: web
+    name: shutterbox-web
+    runtime: node
+    plan: free
+    region: ohio
+    rootDir: web
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: shutterbox-api
+          property: host
