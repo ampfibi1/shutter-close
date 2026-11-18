@@ -16,7 +16,7 @@ services:
       - key: DB_ENV
         value: neon
       - key: NEON_DATABASE_URL
-        value: postgresql://neondb_owner:npg_J3ircaCI8EuV@ep-young-salad-b4hhr3t3-pooler.c-6.us-east-2.aws.neon.tech/neondb?sslmode=require
+        value: postgresql://neondb_owner:npg_J3ircaCI8EuV@ep-young-salad-b4hhr3t3.c-6.us-east-2.aws.neon.tech/neondb?sslmode=require
       - key: JWT_SECRET
         generateValue: true
       - key: CLOUDINARY_URL
